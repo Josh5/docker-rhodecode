@@ -1,0 +1,79 @@
+#!/usr/bin/with-contenv bash
+
+# make our folders
+mkdir -p /run
+
+# copy default configs folder
+rccontrol_config() {
+    mkdir -p /config/.rccontrol/{community-1,vcsserver-1};
+    if [[ ! -h /root/.rccontrol/community-1/rhodecode.ini ]]; then
+        if [[ ! -f /config/.rccontrol/community-1/rhodecode.ini ]]; then
+            echo "**** (rccontrol_config) Moving default rhodecode.ini to config ****";
+            cp -f /root/.rccontrol/community-1/rhodecode.ini /config/.rccontrol/community-1/rhodecode.ini;
+        fi
+        echo "**** (rccontrol_config) Bind rhodecode.ini ****";
+        rm -f /root/.rccontrol/community-1/rhodecode.ini;
+        ln -s /config/.rccontrol/community-1/rhodecode.ini /root/.rccontrol/community-1/rhodecode.ini;
+        touch /config/.rccontrol/community-1/community.log;
+        if [[ ! -h /root/.rccontrol/community-1/community.log ]]; then
+            rm -f /root/.rccontrol/community-1/community.log;
+            ln -s /config/.rccontrol/community-1/community.log /root/.rccontrol/community-1/community.log;
+        fi
+    fi
+    if [[ ! -h /root/.rccontrol/vcsserver-1/vcsserver.ini ]]; then
+        if [[ ! -f /config/.rccontrol/vcsserver-1/vcsserver.ini ]]; then
+            echo "**** (rccontrol_config) Moving default vcsserver.ini to config ****";
+            cp -f /root/.rccontrol/vcsserver-1/vcsserver.ini /config/.rccontrol/vcsserver-1/vcsserver.ini;
+        fi
+        echo "**** (rccontrol_config) Bind vcsserver.ini ****";
+        rm -f /root/.rccontrol/vcsserver-1/vcsserver.ini;
+        ln -s /config/.rccontrol/vcsserver-1/vcsserver.ini /root/.rccontrol/vcsserver-1/vcsserver.ini;
+        touch /config/.rccontrol/vcsserver-1/vcsserver.log;
+        if [[ ! -h /root/.rccontrol/vcsserver-1/vcsserver.log ]]; then
+            rm -f /root/.rccontrol/vcsserver-1/vcsserver.log;
+            ln -s /config/.rccontrol/vcsserver-1/vcsserver.log /root/.rccontrol/vcsserver-1/vcsserver.log;
+        fi
+    fi
+    if [[ ! -h /root/.rccontrol.ini ]]; then
+        [[ ! -f /config/.rccontrol.ini ]] && \
+            cp -f /root/.rccontrol.ini /config/.rccontrol.ini;
+        echo "**** (rccontrol_config) Bind .rccontrol.ini ****";
+        rm -f /root/.rccontrol.ini;
+        ln -s /config/.rccontrol.ini /root/.rccontrol.ini;
+    fi
+    if [[ ! -h /root/.rccontrol.ini ]]; then
+        [[ ! -f /config/.rccontrol.ini ]] && \
+            cp -f /root/.rccontrol.ini /config/.rccontrol.ini;
+        echo "**** (rccontrol_config) Bind .rccontrol.ini ****";
+        rm -f /root/.rccontrol.ini;
+        ln -s /config/.rccontrol.ini /root/.rccontrol.ini;
+    fi
+    if [[ ! -h /root/.rccontrol/community-1/rhodecode.db ]]; then
+        if [[ ! -f /config/.rccontrol/community-1/rhodecode.db ]]; then
+            echo "**** (rccontrol_config) Moving default rhodecode.db to config ****";
+            cp -f /root/.rccontrol/community-1/rhodecode.db /config/.rccontrol/community-1/rhodecode.db;
+        fi
+        echo "**** (rccontrol_config) Bind rhodecode.db ****";
+        rm -f /root/.rccontrol/community-1/rhodecode.db;
+        ln -s /config/.rccontrol/community-1/rhodecode.db /root/.rccontrol/community-1/rhodecode.db;
+    fi
+    if [[ ! -h /root/.ssh ]]; then
+        echo "**** (rccontrol_config) Bind .ssh ****";
+        rm -f /root/.ssh;
+        ln -s /config/.ssh /root/.ssh;
+    fi
+}
+permissions_config() {
+    echo "**** (permissions_config) Settings permissions ****";
+    chown -R $PUID:$PGID \
+        /config \
+        /run
+    chmod -R g+w \
+        /config/.rccontrol
+    chmod -R 644 /etc/logrotate.d
+    chmod -R 777 /tmp
+}
+
+
+rccontrol_config;
+permissions_config;

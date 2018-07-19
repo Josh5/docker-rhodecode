@@ -1,0 +1,2 @@
+#!/usr/bin/with-contenv bash
+exec /root/.rccontrol-profile/bin/supervisord -c /root/.rccontrol/supervisor/supervisord.ini
