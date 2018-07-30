@@ -1,4 +1,4 @@
-FROM josh5/base-alpine3.7:latest
+FROM josh5/base-alpine:3.7
 
 
 ARG RHODECODE_VERSION=NzA2MjdhN2E2ODYxNzY2NzZjNDA2NTc1NjI3MTcyNzA2MjcxNzIyZTcwNjI3YQ==
