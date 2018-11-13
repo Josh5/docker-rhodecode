@@ -2,8 +2,8 @@ FROM josh5/base-alpine:3.7
 
 
 ARG RHODECODE_VERSION=NzA2MjdhN2E2ODYxNzY2NzZjNDA2NTc1NjI3MTcyNzA2MjcxNzIyZTcwNjI3YQ==
-ARG VCSSERVER_URL=https://dls.rhodecode.com/linux/RhodeCodeVCSServer-4.12.4+x86_64-linux_build20180918_1700.tar.bz2
-ARG COMMUNITY_URL=https://dls.rhodecode.com/linux/RhodeCodeCommunity-4.12.4+x86_64-linux_build20180918_1700.tar.bz2
+ARG VCSSERVER_URL=https://dls.rhodecode.com/linux/RhodeCodeVCSServer-4.14.1+x86_64-linux_build20181112_1400.tar.bz2
+ARG COMMUNITY_URL=https://dls.rhodecode.com/linux/RhodeCodeCommunity-4.14.1+x86_64-linux_build20181112_1400.tar.bz2
 
 
 # install RhodeCode
