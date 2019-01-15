@@ -1,0 +1,4 @@
+#!/bin/bash
+
+/root/.rccontrol/community-1/profile/bin/paster upgrade-db ./root/.rccontrol/community-1/rhodecode.ini
+
