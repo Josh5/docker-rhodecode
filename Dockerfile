@@ -1,9 +1,10 @@
-FROM josh5/base-alpine:3.7
+FROM josh5/base-alpine:3.8
 
 
 ARG RHODECODE_VERSION=NzA2MjdhN2E2ODYxNzY2NzZjNDA2NTc1NjI3MTcyNzA2MjcxNzIyZTcwNjI3YQ==
-ARG VCSSERVER_URL=https://dls.rhodecode.com/linux/RhodeCodeVCSServer-4.14.1+x86_64-linux_build20181112_1400.tar.bz2
-ARG COMMUNITY_URL=https://dls.rhodecode.com/linux/RhodeCodeCommunity-4.14.1+x86_64-linux_build20181112_1400.tar.bz2
+ARG VCSSERVER_VERSION=4.15.1
+ARG VCSSERVER_URL=https://dls.rhodecode.com/linux/RhodeCodeVCSServer-${VCSSERVER_VERSION}+x86_64-linux_build20190102_1600.tar.bz2
+ARG COMMUNITY_URL=https://dls.rhodecode.com/linux/RhodeCodeCommunity-4.15.1+x86_64-linux_build20190102_1600.tar.bz2
 
 
 # install RhodeCode
@@ -32,21 +33,26 @@ RUN \
             nano \
             sudo \
     && \
-    echo "**** install rhodecode ****" && \
+    echo "**** download rhodecode packages ****" && \
         mkdir -p /repos && \
         mkdir -p /root/.rccontrol/cache && \
         cd /root/.rccontrol/cache && \
-        wget ${VCSSERVER_URL} && \
-        wget ${COMMUNITY_URL} && \
+        curl -L ${VCSSERVER_URL} -O && \
+        curl -L ${COMMUNITY_URL} -O && \
+    echo "**** download rhodecode installer ****" && \
         cd /tmp/ && \
-        wget --content-disposition https://dls-eu.rhodecode.com/dls/${RHODECODE_VERSION}/rhodecode-control/latest-linux-ce && \
+        curl -L https://dls-eu.rhodecode.com/dls/${RHODECODE_VERSION}/rhodecode-control/latest-linux-ce -OJ && \
+        INSTALLER=$(ls -Art /tmp/RhodeCode-installer-* | tail -n 1) && \
+        chmod +x ${INSTALLER} && \
+    echo "**** install rhodecode ****" && \
+        cd /tmp/ && \
         INSTALLER=$(ls -Art /tmp/RhodeCode-installer-* | tail -n 1) && \
         chmod +x ${INSTALLER} && \
         ${INSTALLER} --accept-license --create-install-directory --as-root && \
         ${RCCONTROL} self-init && \
     echo "**** setup rhodecode servers ****" && \
-        ${RCCONTROL} install VCSServer --accept-license '{"host":"'"$RHODECODE_HOST"'", "port":'"$RHODECODE_VCS_PORT"'}' --version 4.12.4 --offline && \
-        ${RCCONTROL} install Community --accept-license '{"host":"'"$RHODECODE_HOST"'", "port":'"$RHODECODE_HTTP_PORT"', "username":"'"$RHODECODE_USER"'", "password":"'"$RHODECODE_USER_PASS"'", "email":"'"$RHODECODE_USER_EMAIL"'", "repo_dir":"'"$RHODECODE_REPO_DIR"'", "database": "'"$RHODECODE_DB"'"}' --version 4.12.4 --offline  && \
+        ${RCCONTROL} install VCSServer --accept-license '{"host":"'"$RHODECODE_HOST"'", "port":'"$RHODECODE_VCS_PORT"'}' --version ${VCSSERVER_VERSION} --offline && \
+        ${RCCONTROL} install Community --accept-license '{"host":"'"$RHODECODE_HOST"'", "port":'"$RHODECODE_HTTP_PORT"', "username":"'"$RHODECODE_USER"'", "password":"'"$RHODECODE_USER_PASS"'", "email":"'"$RHODECODE_USER_EMAIL"'", "repo_dir":"'"$RHODECODE_REPO_DIR"'", "database": "'"$RHODECODE_DB"'"}' --version ${VCSSERVER_VERSION} --offline  && \
     echo "**** configure rhodecode ****" && \
         sed -i "s/start_at_boot = True/start_at_boot = False/g" /root/.rccontrol.ini && \
         sed -i "s/self_managed_supervisor = False/self_managed_supervisor = True/g" /root/.rccontrol.ini && \
@@ -76,5 +82,3 @@ ENV \
 
 # intended ports and volumes
 EXPOSE 22 80 443
-VOLUME /config
-VOLUME /repos

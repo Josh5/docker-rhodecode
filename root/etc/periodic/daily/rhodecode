@@ -1,0 +1,8 @@
+#!/bin/sh
+
+echo "Checking for cached rhodecode session data greater than 3 days old..."
+if [[ -e /root/.rccontrol/community-1/data/sessions/data/container_file ]]; then
+    find /root/.rccontrol/community-1/data/sessions/data/container_file/ -type f -mtime +3 -exec rm {} \;
+fi
+
+exit 0
