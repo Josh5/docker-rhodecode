@@ -6,6 +6,7 @@ mkdir -p /run
 # copy default configs folder
 rccontrol_config() {
     mkdir -p /config/.rccontrol/{community-1,vcsserver-1};
+    cp -f /root/.rccontrol/community-1/rhodecode_default.ini /config/.rccontrol/community-1/rhodecode_default.ini;
     if [[ ! -h /root/.rccontrol/community-1/rhodecode.ini ]]; then
         if [[ ! -f /config/.rccontrol/community-1/rhodecode.ini ]]; then
             echo "**** (rccontrol_config) Moving default rhodecode.ini to config ****";

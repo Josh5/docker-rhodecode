@@ -60,6 +60,8 @@ RUN \
         echo "[supervisord]" >> /root/.rccontrol/supervisor/rhodecode_config_supervisord.ini && \
         echo "nodaemon = true" >> /root/.rccontrol/supervisor/rhodecode_config_supervisord.ini && \
         ${RCCONTROL} self-stop && \
+    echo "**** create backup of this version's configs ****" && \
+        cp /root/.rccontrol/community-1/rhodecode.ini /root/.rccontrol/community-1/rhodecode_default.ini && \
     echo "**** cleanup ****" && \
         rm -f /tmp/* && \
         rm -f /repos/* && \
